@@ -24,24 +24,18 @@ namespace FileApplication {
                     int distanceTotal = 0;
                     int similarityScore = 0;
 
-                    List<int> list1 = new List<int>();
-                    List<int> list2 = new List<int>();
+                    int safeCount = 0;
+                    int problemDampenerSafeCount = 0;
                     
                     while ((data = sr.ReadLine()) != null) {
                         //check data if it's blank 
                         if (data.Length != 0) {
-                            assignDataToList(data, list1, list2);
+                            safeCount += determineSafeReport(data);
+                            problemDampenerSafeCount += determineSafeReportWithDampener(data);
                         }
                     }
-
-                    //get distance total
-                    distanceTotal = getDistanceTotal(list1, list2);
-
-                    //get similarity score
-                    similarityScore = getSimilarityScore(list1, list2);
-                    
-                    Console.WriteLine("distanceTotal: {0}", distanceTotal);
-                    Console.WriteLine("similarityScore: {0}", similarityScore);
+                    Console.WriteLine("safeCount: {0}", safeCount);
+                    Console.WriteLine("problemDampenerSafeCount: {0}", problemDampenerSafeCount);
                 }                    
 
             } catch (Exception e) {
@@ -51,52 +45,187 @@ namespace FileApplication {
             }
       }
 
-      static void assignDataToList(string data, List<int> list1, List<int> list2) {
-        //Console.WriteLine("data: {0}", data);
-        string[] dataSplit = data.Split("   ");
+      static int determineSafeReport(string data) {
+        // Console.WriteLine("data: {0}", data);
 
-        list1.Add(Int32.Parse(dataSplit[0]));
-        list2.Add(Int32.Parse(dataSplit[1]));    
+        string[] dataSplit = data.Split(" ");
+        List<int> level = new List<int>();
+
+        foreach (string item in dataSplit) {
+            // Console.WriteLine("item: {0}", item);
+            level.Add(Int32.Parse(item));
+        }
+       return processLevel(level);       
       }
 
-      static int getDistanceTotal(List<int> list1, List<int> list2) {
-        int distanceTotal = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int distance = list2[x] - list1[x];
-            if (distance < 0) {
-                distance = distance * -1;
+      static int processLevel(List<int> level) {
+            bool isSafe = false;
+            bool isIncreasing = false;
+            if (level[0] < level[1]) {
+                isIncreasing = true;
             }
-            distanceTotal += distance;
+            // Console.WriteLine("isIncreasing: {0}", isIncreasing);
+
+            for (int x = 0; x < level.Count - 1; x++) {
+                // Console.WriteLine("x: {0}", x);
+                // Console.WriteLine("level[x]: {0}", level[x]);
+                // Console.WriteLine("level[x+1]: {0}", level[x+1]);
+                int checkLevel = level[x] - level[x+1];
+                // Console.WriteLine("checkLevel: {0}", checkLevel);
+                
+                if (isIncreasing) {
+                    if (checkLevel < 0) {
+                        checkLevel = checkLevel * -1;
+                    } else {
+                        isSafe = false;
+                        break;
+                    }
+                } else {
+                    if (checkLevel < 0) {
+                        isSafe = false;
+                        break;
+                    }
+                }
+
+                // Console.WriteLine("checkLevel2: {0}", checkLevel);
+                
+                if (checkLevel <= 3 && checkLevel > 0) {
+                    isSafe = true;
+                } else {
+                    isSafe = false;
+                    break;
+                }
+            }
+
+            if (isSafe) {
+                //Console.WriteLine(" safe");
+                return 1;
+            } else {
+                //Console.WriteLine(" not safe");
+                return 0;
+            }
+        }
+        
+        static int determineSafeReportWithDampener(string data) {
+        // Console.WriteLine("data: {0}", data);
+
+        bool isSafe = false;
+        int dampenerCount = 0;
+        string[] dataSplit = data.Split(" ");
+        List<int> level = new List<int>();
+
+        foreach (string item in dataSplit) {
+            // Console.WriteLine("item: {0}", item);
+            level.Add(Int32.Parse(item));
+        }
+       
+        bool isIncreasing = false;
+        if (level[0] < level[1]) {
+            isIncreasing = true;
+        }
+        // Console.WriteLine("isIncreasing: {0}", isIncreasing);
+
+        for (int x = 0; x < level.Count - 1; x++) {
+            // Console.WriteLine("x: {0}", x);
+            // Console.WriteLine("level[x]: {0}", level[x]);
+            // Console.WriteLine("level[x+1]: {0}", level[x+1]);
+            int checkLevel = level[x] - level[x+1];
+            // Console.WriteLine("checkLevel: {0}", checkLevel);
+            
+            if (isIncreasing) {
+                if (checkLevel < 0) {
+                    checkLevel = checkLevel * -1;
+                } else {
+                    dampenerCount++;
+                }
+            } else {
+                if (checkLevel < 0) {
+                    dampenerCount++;
+                }
+            }
+
+            // Console.WriteLine("checkLevel2: {0}", checkLevel);
+            
+            if (checkLevel <= 3 && checkLevel > 0) {
+                isSafe = true;
+            } else {
+                dampenerCount++;
+            }
         }
 
-        return distanceTotal;
+        // Console.WriteLine("dampenerCount: {0}", dampenerCount);
+        // Console.WriteLine("xbit: {0}", xbit);
+
+        if (isSafe && dampenerCount == 0) {
+            // Console.WriteLine(" safe");
+            return 1;
+        } else {
+            // Console.Write("level before: ");
+            // foreach (int item in level) {
+            //     Console.Write("{0} ", item);
+            // }
+            for (int x = 0; x < level.Count; x++) {
+                List<int> damperTestLevel = new List<int>(level);
+                damperTestLevel.RemoveAt(x);
+                //  Console.Write("level after {0}:", x);
+                //     foreach (int item in damperTestLevel) {
+                //         Console.Write("{0} ", item);
+                //     }
+                //     Console.WriteLine();
+                    //Console.WriteLine("damperTestLevel.Count: {0}", damperTestLevel.Count);
+                int testCount = countDamperTestLevel(damperTestLevel);
+                if (testCount == damperTestLevel.Count -1) {
+                    //Console.WriteLine(" safe");
+                    return 1;
+                }
+            }
+            //Console.WriteLine();
+            return 0;
+        }
       }
 
-      static int getSimilarityScore(List<int> list1, List<int> list2) {
-        int similarityScore = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int tempScore = 0;
-            //Console.WriteLine("list1: {0}", list1[x]);
-            for (int y = 0; y < list2.Count; y++) {
-                //Console.WriteLine("list2: {0}", list2[y]);
-                if (list1[x] == list2[y]) {
-                    tempScore += 1;
-                }
-            }     
-            similarityScore += list1[x] * tempScore;       
+      static int countDamperTestLevel (List<int> level) {
+        int levelCount = 0;
+        bool isIncreasing = false;
+        bool isSafe = true;
+        if (level[0] < level[1]) {
+            isIncreasing = true;
         }
 
-        return similarityScore;
+        for (int x = 0; x < level.Count - 1; x++) {
+            int checkLevel = level[x] - level[x+1];
+            
+            if (isIncreasing) {
+                if (checkLevel < 0) {
+                    checkLevel = checkLevel * -1;
+                } else {
+                    isSafe = false;
+                    break;
+                }
+            } else {
+                if (checkLevel < 0) {
+                    isSafe = false;
+                    break;
+                }
+            }
+
+            // Console.WriteLine("checkLevel2: {0}", checkLevel);
+            
+            if (checkLevel <= 3 && checkLevel > 0) {
+                levelCount++;
+            } else {
+                isSafe = false;
+                break;
+            }
+        }
+        //Console.WriteLine("levelCount: {0}", levelCount);
+        if (isSafe) {
+            //Console.WriteLine(" safe");
+            return levelCount;
+        } else {
+            //Console.WriteLine(" not safe");
+            return 0;
+        }
       }
    }
 }
