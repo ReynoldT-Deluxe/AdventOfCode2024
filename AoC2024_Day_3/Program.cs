@@ -5,6 +5,8 @@ using System.Linq;
 using System.Configuration;
 using System.Collections.Specialized;
 using System.Collections;
+using System.Text.RegularExpressions;
+using System.Numerics;
 
 namespace FileApplication {
    class Program {
@@ -21,27 +23,51 @@ namespace FileApplication {
                 using (StreamReader sr = new StreamReader(dataLocation)) {
                     
                     string data;
-                    int distanceTotal = 0;
-                    int similarityScore = 0;
-
-                    List<int> list1 = new List<int>();
-                    List<int> list2 = new List<int>();
+                    BigInteger totals = 0;
+                    BigInteger totalsWithConditions = 0;
+                    List<List<string>> dataList = new List<List<string>>();
                     
                     while ((data = sr.ReadLine()) != null) {
                         //check data if it's blank 
                         if (data.Length != 0) {
-                            assignDataToList(data, list1, list2);
+                            totals += getMultiplierData(data);
+                            dataList.Add(getMultiplierDataWithConditions(data));
+                        }
+                    }
+                    
+                    Console.WriteLine("totals: {0}", totals);
+
+                    bool skip = false;
+                    string previousStep = "do"; 
+                    int i = 0;
+                    BigInteger multiplierData = 0; 
+
+                    foreach (var item in dataList) {                                               
+                        foreach (var item2 in item) {      
+                            i++;                      
+                            if (item2 == "don't()") {
+                                //Console.WriteLine("i: {1}, item2: {0}", item2, i);
+                                previousStep = "don't";
+                                skip = true;
+                                continue;
+                            } else if (item2 == "do()") {
+                                //Console.WriteLine("i: {1}, item2: {0}", item2, i);
+                                previousStep = "do";
+                                skip = false;
+                                continue;
+                            } else if (skip) {
+                                //Console.WriteLine("i: {1}, skip -- item2: {0}", item2, i);
+                                continue;
+                            }
+                            var mulMatches = Regex.Matches(item2, @"\d+");
+                            BigInteger mul1 = BigInteger.Parse(mulMatches[0].Value);
+                            BigInteger mul2 = BigInteger.Parse(mulMatches[1].Value);
+                            multiplierData = multiplierData + (mul1 * mul2);
+                            //Console.WriteLine("i: {4}, mul1: {0}, mul2: {1}, mul1 * mul2: {2}, multiplierData: {3}", mul1, mul2, mul1 * mul2, multiplierData, i);
                         }
                     }
 
-                    //get distance total
-                    distanceTotal = getDistanceTotal(list1, list2);
-
-                    //get similarity score
-                    similarityScore = getSimilarityScore(list1, list2);
-                    
-                    Console.WriteLine("distanceTotal: {0}", distanceTotal);
-                    Console.WriteLine("similarityScore: {0}", similarityScore);
+                    Console.WriteLine("totalsWithConditions: {0}", multiplierData);
                 }                    
 
             } catch (Exception e) {
@@ -51,52 +77,49 @@ namespace FileApplication {
             }
       }
 
-      static void assignDataToList(string data, List<int> list1, List<int> list2) {
-        //Console.WriteLine("data: {0}", data);
-        string[] dataSplit = data.Split("   ");
+        static BigInteger getMultiplierData(string data) {
+            BigInteger multiplierData = 0;
+            BigInteger finalMultiplierData = 0;
+            int i = 0;
+            string pattern = @"mul\(\d+,\d+\)"; 
+            Regex regex = new Regex(pattern);
+            MatchCollection matches = regex.Matches(data);
+            //Console.WriteLine("matches: {0}", matches.Count);
 
-        list1.Add(Int32.Parse(dataSplit[0]));
-        list2.Add(Int32.Parse(dataSplit[1]));    
-      }
-
-      static int getDistanceTotal(List<int> list1, List<int> list2) {
-        int distanceTotal = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int distance = list2[x] - list1[x];
-            if (distance < 0) {
-                distance = distance * -1;
-            }
-            distanceTotal += distance;
-        }
-
-        return distanceTotal;
-      }
-
-      static int getSimilarityScore(List<int> list1, List<int> list2) {
-        int similarityScore = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int tempScore = 0;
-            //Console.WriteLine("list1: {0}", list1[x]);
-            for (int y = 0; y < list2.Count; y++) {
-                //Console.WriteLine("list2: {0}", list2[y]);
-                if (list1[x] == list2[y]) {
-                    tempScore += 1;
+            foreach (Match match in matches)
+            {
+                i++;
+                //Console.WriteLine("Found match: " + match.Value);
+                var mulMatches = Regex.Matches(match.Value, @"\d+");
+                BigInteger mul1 = BigInteger.Parse(mulMatches[0].Value);
+                BigInteger mul2 = BigInteger.Parse(mulMatches[1].Value);
+                multiplierData = multiplierData + (mul1 * mul2);
+                //Console.WriteLine("i: {4}, mul1: {0}, mul2: {1}, mul1 * mul2: {2}, multiplierData: {3}", mul1, mul2, mul1 * mul2, multiplierData, i);
+                if (i == matches.Count) {
+                    finalMultiplierData += multiplierData;
                 }
-            }     
-            similarityScore += list1[x] * tempScore;       
-        }
+            } 
 
-        return similarityScore;
-      }
+            return finalMultiplierData;     
+        } 
+
+        static List<string> getMultiplierDataWithConditions(string data) {
+            //BigInteger multiplierData = 0;
+            //BigInteger finalMultiplierData = 0;
+            //int i = 0;
+            string pattern = @"mul\(\d+,\d+\)|do\(\)|don\'t\(\)"; 
+            Regex regex = new Regex(pattern);
+            MatchCollection matches = regex.Matches(data);
+            //Console.WriteLine("matches: {0}", matches.Count);
+            List<string> dataList = new List<string>();
+            
+            foreach (Match match in matches)
+            {
+                dataList.Add(match.Value);
+                // i++;
+            } 
+
+            return dataList;   
+        }
    }
 }
