@@ -21,27 +21,41 @@ namespace FileApplication {
                 using (StreamReader sr = new StreamReader(dataLocation)) {
                     
                     string data;
-                    int distanceTotal = 0;
-                    int similarityScore = 0;
+                    //sample data
+                    //int matrixLimit = s;
+                    //aoc data
+                    int matrixLimit = 142;
 
-                    List<int> list1 = new List<int>();
-                    List<int> list2 = new List<int>();
-                    
+                    int dataRow = 0;
+                    string[,] arr = new string[matrixLimit, matrixLimit];
+
                     while ((data = sr.ReadLine()) != null) {
                         //check data if it's blank 
                         if (data.Length != 0) {
-                            assignDataToList(data, list1, list2);
+                            for (int dataCol = 0; dataCol < data.Length; dataCol++) {
+                                char temp = data[dataCol];
+                                //Console.WriteLine("dataRow: {0}, dataCol: {1}, temp: {2}", dataRow, dataCol, temp);
+                                arr[dataRow, dataCol] = temp.ToString();
+                            }
                         }
+                        dataRow++;
                     }
 
-                    //get distance total
-                    distanceTotal = getDistanceTotal(list1, list2);
+                    //print matrix
+                    // for (int col = 0; col < matrixLimit; col++) {
+                    //     for (int row = 0; row < matrixLimit; row++) {
+                    //         Console.Write(arr[row, col]);
+                    //     }
+                    //     Console.WriteLine();
+                    // }
 
-                    //get similarity score
-                    similarityScore = getSimilarityScore(list1, list2);
+                    //get XMAS count
+                    int xmasCount = getXMASCount(arr, matrixLimit);
+                    //get X-MAS count
+                    int x_masCount = getX_MASCount(arr, matrixLimit);
                     
-                    Console.WriteLine("distanceTotal: {0}", distanceTotal);
-                    Console.WriteLine("similarityScore: {0}", similarityScore);
+                    Console.WriteLine("xmasCount: {0}", xmasCount);
+                    Console.WriteLine("x_masCount: {0}", x_masCount);
                 }                    
 
             } catch (Exception e) {
@@ -49,54 +63,262 @@ namespace FileApplication {
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
-      }
+      } 
 
-      static void assignDataToList(string data, List<int> list1, List<int> list2) {
-        //Console.WriteLine("data: {0}", data);
-        string[] dataSplit = data.Split("   ");
+      static int getXMASCount(string[,] arr, int matrixLimit) {
+        int xmasCount = 0;
 
-        list1.Add(Int32.Parse(dataSplit[0]));
-        list2.Add(Int32.Parse(dataSplit[1]));    
-      }
-
-      static int getDistanceTotal(List<int> list1, List<int> list2) {
-        int distanceTotal = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int distance = list2[x] - list1[x];
-            if (distance < 0) {
-                distance = distance * -1;
-            }
-            distanceTotal += distance;
-        }
-
-        return distanceTotal;
-      }
-
-      static int getSimilarityScore(List<int> list1, List<int> list2) {
-        int similarityScore = 0;
-
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int tempScore = 0;
-            //Console.WriteLine("list1: {0}", list1[x]);
-            for (int y = 0; y < list2.Count; y++) {
-                //Console.WriteLine("list2: {0}", list2[y]);
-                if (list1[x] == list2[y]) {
-                    tempScore += 1;
+        for (int row = 0; row < matrixLimit; row++) {
+            for (int col = 0; col < matrixLimit; col++) {
+                if (arr[row, col] != "X") {
+                    continue;
+                } else {
+                    //check XMAS to the right
+                    if (foundRight(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the left
+                    if (foundLeft(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the top 
+                    if (foundTop(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the bottom
+                    if (foundBottom(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the top right
+                    if (foundTopRight(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the top left    
+                    if (foundTopLeft(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the bottom right
+                    if (foundBottomRight(arr, row, col)) {
+                        xmasCount++;
+                    }
+                    //check XMAS to the bottom left
+                    if (foundBottomLeft(arr, row, col)) {
+                        xmasCount++;
+                    }
                 }
-            }     
-            similarityScore += list1[x] * tempScore;       
+            }
         }
-
-        return similarityScore;
+        return xmasCount;
       }
-   }
-}
+
+      static bool foundRight(string[,] arr, int row, int col) {        
+        if (arr[row, col + 1] == "M") {
+            if (arr[row, col + 2] == ".") {
+                return false;
+            } else if (arr[row, col + 2] == "A") {
+                if (arr[row, col + 3] == ".") {
+                    return false;
+                } else if (arr[row, col + 3] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row, col + 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundLeft(string[,] arr, int row, int col) {        
+        if (arr[row, col - 1] == "M") {
+            if (arr[row, col - 2] == ".") {
+                return false;
+            } else if (arr[row, col - 2] == "A") {
+                if (arr[row, col - 3] == ".") {
+                    return false;
+                } else if (arr[row, col - 3] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row, col - 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundTop(string[,] arr, int row, int col) {        
+        if (arr[row - 1, col] == "M") {
+            if (arr[row - 2, col] == ".") {
+                return false;
+            } else if (arr[row - 2, col] == "A") {
+                if (arr[row - 3, col] == ".") {
+                    return false;
+                } else if (arr[row - 3, col] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row - 1, col] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundBottom(string[,] arr, int row, int col) {        
+        if (arr[row + 1, col] == "M") {
+            if (arr[row + 2, col] == ".") {
+                return false;
+            } else if (arr[row + 2, col] == "A") {
+                if (arr[row + 3, col] == ".") {
+                    return false;
+                } else if (arr[row + 3, col] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row + 1, col] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundTopRight(string[,] arr, int row, int col) {        
+        if (arr[row - 1, col + 1] == "M") {
+            if (arr[row - 2, col + 2] == ".") {
+                return false;
+            } else if (arr[row - 2, col + 2] == "A") {
+                if (arr[row - 3, col + 3] == ".") {
+                    return false;
+                } else if (arr[row - 3, col + 3] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row - 1, col + 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundBottomRight(string[,] arr, int row, int col) {        
+        if (arr[row + 1, col + 1] == "M") {
+            if (arr[row + 2, col + 2] == ".") {
+                return false;
+            } else if (arr[row + 2, col + 2] == "A") {
+                if (arr[row + 3, col + 3] == ".") {
+                    return false;
+                } else if (arr[row + 3, col + 3] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row + 1, col + 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundTopLeft(string[,] arr, int row, int col) {        
+        if (arr[row - 1, col - 1] == "M") {
+            if (arr[row - 2, col - 2] == ".") {
+                return false;
+            } else if (arr[row - 2, col - 2] == "A") {
+                if (arr[row - 3, col - 3] == ".") {
+                    return false;
+                } else if (arr[row - 3, col - 3] == "S") {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        } else if (arr[row - 1, col - 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static bool foundBottomLeft(string[,] arr, int row, int col) {        
+        if (arr[row + 1, col - 1] == "M") {
+            if (arr[row + 2, col - 2] == ".") {
+                return false;
+            } else if (arr[row + 2, col - 2] == "A") {
+                if (arr[row + 3, col - 3] == ".") {
+                    return false;
+                } else if (arr[row + 3, col - 3] == "S") {
+                    return true;
+                }
+            }
+        } else if (arr[row + 1, col - 1] == ".") {
+            return false;
+        }
+        return false;
+      }
+
+      static int getX_MASCount(string[,] arr, int matrixLimit) {
+        int x_masCount = 0;
+
+        for (int row = 0; row < matrixLimit; row++) {
+            for (int col = 0; col < matrixLimit; col++) {
+                if (arr[row, col] != "A") {
+                    continue;
+                } else {
+                    //check MAS left to right
+                    if (foundMAS_ltr(arr, row, col)) {
+                        //check MAS right to left
+                        if (foundMAS_rtl(arr, row, col)) {
+                            x_masCount++;
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+        return x_masCount;
+      }
+
+      static bool foundMAS_ltr(string[,] arr, int row, int col) {
+        if (arr[row - 1, col - 1] == "S") {
+            if (arr[row + 1, col + 1] == "M") {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (arr[row - 1, col - 1] == "M") {
+            if (arr[row + 1, col + 1] == "S") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+      }
+
+      static bool foundMAS_rtl(string[,] arr, int row, int col) {
+        if (arr[row - 1, col + 1] == "S") {
+            if (arr[row + 1, col - 1] == "M") {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (arr[row - 1, col + 1] == "M") {
+            if (arr[row + 1, col - 1] == "S") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+      }
+
+   } //end class
+} //end namespace
