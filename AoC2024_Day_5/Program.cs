@@ -13,6 +13,7 @@ namespace FileApplication {
         string dataLocation2 = "";
         
         //data to use
+        //note: separated the page rules and print list data into 2 input files for easier processing
         //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData1.txt";     
         //dataLocation2 = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData2.txt";
         dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/aocData1.txt"; 
