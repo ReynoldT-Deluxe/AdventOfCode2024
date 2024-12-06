@@ -10,39 +10,63 @@ namespace FileApplication {
    class Program {
       static void Main(string[] args) {
         string dataLocation = "";
+        string dataLocation2 = "";
         
         //data to use
-        dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData1.txt";
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/aocData1.txt"; 
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData2.txt";
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/aocData2.txt"; 
+        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData1.txt";     
+        //dataLocation2 = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/sampleData2.txt";
+        dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/aocData1.txt"; 
+        dataLocation2 = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_5/aocData2.txt"; 
 
             try {
+                List<string[]> pageRules = new List<string[]>();
+                List<string[]> printList = new List<string[]>();
+
                 using (StreamReader sr = new StreamReader(dataLocation)) {
                     
                     string data;
-                    int distanceTotal = 0;
-                    int similarityScore = 0;
-
-                    List<int> list1 = new List<int>();
-                    List<int> list2 = new List<int>();
-                    
                     while ((data = sr.ReadLine()) != null) {
                         //check data if it's blank 
                         if (data.Length != 0) {
-                            assignDataToList(data, list1, list2);
+                            pageRules.Add(assignPageRules(data));
                         }
                     }
 
-                    //get distance total
-                    distanceTotal = getDistanceTotal(list1, list2);
+                    //print page rules
+                    // for (int x = 0; x < pageRules.Count; x++) {
+                    //     Console.Write("pageRules{0}: ", x+1);
+                    //     foreach(string item in pageRules[x]) {
+                    //         Console.Write("{0} ", item);
+                    //     }
+                    //     Console.WriteLine();
+                    // }
+                }       
 
-                    //get similarity score
-                    similarityScore = getSimilarityScore(list1, list2);
+                using (StreamReader sr = new StreamReader(dataLocation2)) {
                     
-                    Console.WriteLine("distanceTotal: {0}", distanceTotal);
-                    Console.WriteLine("similarityScore: {0}", similarityScore);
-                }                    
+                    string data2;
+                    while ((data2 = sr.ReadLine()) != null) {
+                        //check data if it's blank 
+                        if (data2.Length != 0) {
+                            printList.Add(assignPrintList(data2));
+                        }
+                    }
+
+                    //print print list
+                    // for (int x = 0; x < printList.Count; x++) {
+                    //     Console.Write("printList{0}: ", x+1);
+                    //     foreach(string item in printList[x]) {
+                    //         Console.Write("{0} ", item);
+                    //     }
+                    //     Console.WriteLine();
+                    // }
+                } 
+
+                //Console.WriteLine("data: {0} {1}", pageRules.Count, printList.Count);
+
+                //get middle total
+                int middleTotal = getMiddleTotal(pageRules, printList);
+                Console.WriteLine("middleTotal: {0}", middleTotal);
 
             } catch (Exception e) {
                 // Let the user know what went wrong.
@@ -51,52 +75,79 @@ namespace FileApplication {
             }
       }
 
-      static void assignDataToList(string data, List<int> list1, List<int> list2) {
-        //Console.WriteLine("data: {0}", data);
-        string[] dataSplit = data.Split("   ");
-
-        list1.Add(Int32.Parse(dataSplit[0]));
-        list2.Add(Int32.Parse(dataSplit[1]));    
+      static string[] assignPageRules(string data) {        
+        string[] dataSplit = data.Split("|");
+        string[] pageRules = {dataSplit[0], dataSplit[1]}; 
+        //Console.WriteLine("pageRules: {0} {1}", pageRules[0], pageRules[1]);
+        return pageRules;
       }
 
-      static int getDistanceTotal(List<int> list1, List<int> list2) {
-        int distanceTotal = 0;
+      static string[] assignPrintList(string data) {        
+        string[] dataSplit = data.Split(",");
+        string[] printRules = new string[dataSplit.Length];
 
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int distance = list2[x] - list1[x];
-            if (distance < 0) {
-                distance = distance * -1;
-            }
-            distanceTotal += distance;
+        for (int x = 0; x < dataSplit.Length; x++) {
+            printRules[x] = dataSplit[x];
         }
-
-        return distanceTotal;
+        return printRules;
       }
 
-      static int getSimilarityScore(List<int> list1, List<int> list2) {
-        int similarityScore = 0;
+      static int getMiddleTotal(List<string[]> pageRules, List<string[]> printList) {
+        int middleTotal = 0;
+        bool ruleBroken = false;
+        int[] ruleBreakCount = new int[printList.Count];
 
-        //sort the list
-        list1.Sort();
-        list2.Sort();
-
-        for (int x = 0; x < list1.Count; x++) {
-            int tempScore = 0;
-            //Console.WriteLine("list1: {0}", list1[x]);
-            for (int y = 0; y < list2.Count; y++) {
-                //Console.WriteLine("list2: {0}", list2[y]);
-                if (list1[x] == list2[y]) {
-                    tempScore += 1;
+        //iterate thru printList
+        for (int x = 0; x < pageRules.Count; x++) {
+            //Console.WriteLine("pageRules {0}: {1}|{2}", x+1, pageRules[x][0], pageRules[x][1]);
+            //iterate thru list of items
+            for (int y = 0; y < printList.Count; y++) {
+                //Console.Write("printList{0}: ", y+1);
+                foreach(string item in printList[y]) {
+                    //Console.Write("{0} ", item);
                 }
-            }     
-            similarityScore += list1[x] * tempScore;       
+                //Console.WriteLine();
+                //iterate forward
+                for (int z = 1; z < printList[y].Length; z++) {
+                    if (printList[y][z] == pageRules[x][1]) {
+                        //Console.WriteLine("index data:{0} ", printList[y][z]);
+                        int index = Array.IndexOf(printList[y], pageRules[x][0]);
+                        //Console.WriteLine("index: {0}", index);
+                        if (index > z) {
+                            ruleBreakCount[y]++;
+                        }
+                    } else {
+                        continue;
+                    }                    
+                }   
+                //iterate backward
+                for (int z = printList[y].Length - 1; z > 0; z--) {
+                    if (printList[y][z] == pageRules[x][0]) {
+                        //Console.WriteLine("index data:{0} ", printList[y][z]);
+                        int index = Array.IndexOf(printList[y], pageRules[x][1]);
+                        //Console.WriteLine("index: {0}", index);
+                        if (index < z && index != -1) {
+                            ruleBreakCount[y]++;
+                        }
+                    } else {
+                        continue;
+                    }                    
+                }       
+            }            
         }
 
-        return similarityScore;
+        for (int cnt = 0; cnt < ruleBreakCount.Length; cnt++) {
+            //Console.WriteLine("ruleBreakCount: {0}", item);
+            if (ruleBreakCount[cnt] == 0) {
+                int middleInt = printList[cnt].Length / 2;
+                string middleData = printList[cnt][middleInt];
+                //Console.WriteLine("middle: {0}", Int32.Parse(middleData));
+                middleTotal += Int32.Parse(middleData);
+            }
+        }
+
+        return middleTotal;
       }
-   }
-}
+
+   }//end of class
+}//end of namespace
