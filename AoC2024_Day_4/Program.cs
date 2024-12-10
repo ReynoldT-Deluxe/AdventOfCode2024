@@ -15,9 +15,7 @@ namespace FileApplication {
         //note: Padded data with "." on all sides to avoid out of bounds exception
         //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_4/sampleData1.txt";
         dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_4/aocData1.txt"; 
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_4/sampleData2.txt";
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_4/aocData2.txt"; 
-
+        
             try {
                 using (StreamReader sr = new StreamReader(dataLocation)) {
                     

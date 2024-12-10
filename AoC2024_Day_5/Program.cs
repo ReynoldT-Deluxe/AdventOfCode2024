@@ -69,6 +69,8 @@ namespace FileApplication {
                 int middleTotal = getMiddleTotal(pageRules, printList);
                 Console.WriteLine("middleTotal: {0}", middleTotal);
 
+                //I didn't work on part 2 (T.T)
+
             } catch (Exception e) {
                 // Let the user know what went wrong.
                 Console.WriteLine("The file could not be read:");

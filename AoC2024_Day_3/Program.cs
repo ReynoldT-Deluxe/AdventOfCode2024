@@ -15,10 +15,9 @@ namespace FileApplication {
         
         //data to use
         //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_3/sampleData1.txt";
-        dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_3/aocData1.txt"; 
         //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_3/sampleData2.txt";
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_3/aocData2.txt"; 
-
+        dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_3/aocData1.txt"; 
+        
             try {
                 using (StreamReader sr = new StreamReader(dataLocation)) {
                     

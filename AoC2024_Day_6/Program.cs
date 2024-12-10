@@ -15,9 +15,7 @@ namespace FileApplication {
         //note: padded the border with a 0 to avoid out of bounds
         //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_6/sampleData1.txt";
         dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_6/aocData1.txt"; 
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_6/sampleData2.txt";
-        //dataLocation = "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_6/aocData2.txt"; 
-
+        
         //int mapLimits = 12;
         int mapLimits = 132;
 
@@ -56,6 +54,7 @@ namespace FileApplication {
         }
         
         //check looping by adding obstacles
+        //this only worked for the sample data (T.T)
         //int stepCount = 90;
         int stepCount = 15000;
         int loopCount = countLoops(dataLocation, mapLimits, stepCount);
