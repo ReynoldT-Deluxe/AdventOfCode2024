@@ -1,0 +1,15 @@
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/bin/Debug/net7.0/AoC2024_Day_13
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/bin/Debug/net7.0/AoC2024_Day_13.deps.json
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/bin/Debug/net7.0/AoC2024_Day_13.runtimeconfig.json
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/bin/Debug/net7.0/AoC2024_Day_13.dll
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/bin/Debug/net7.0/AoC2024_Day_13.pdb
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.csproj.AssemblyReference.cache
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.GeneratedMSBuildEditorConfig.editorconfig
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.AssemblyInfoInputs.cache
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.AssemblyInfo.cs
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.csproj.CoreCompileInputs.cache
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.dll
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/refint/AoC2024_Day_13.dll
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.pdb
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/AoC2024_Day_13.genruntimeconfig.cache
+/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/Debug/net7.0/ref/AoC2024_Day_13.dll

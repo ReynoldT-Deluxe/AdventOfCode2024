@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_8/AoC2024_Day_8.csproj",
-      "projectName": "AoC2024_Day_8",
-      "projectPath": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_8/AoC2024_Day_8.csproj",
+      "projectUniqueName": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/AoC2024_Day_13.csproj",
+      "projectName": "AoC2024_Day_13",
+      "projectPath": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/AoC2024_Day_13.csproj",
       "packagesPath": "/Users/t452172/.nuget/packages/",
-      "outputPath": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_8/obj/",
+      "outputPath": "/Users/t452172/Documents/Personal/Advent_of_Code/2024/AdventOfCode2024/AoC2024_Day_13/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/t452172/.nuget/NuGet/NuGet.Config"
